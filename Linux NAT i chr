@@ -1,0 +1,17 @@
+//postavljanje ip adrese na sucelju enp0s8
+sudo ip addr add 192.168.56.1/24 dev enp0s8
+sudo ip link set enp0s8 up
+
+//konfiguriranje NAT-a
+sudo sysctl -w net.ipv4.ip_forward=1
+echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf
+sudo iptables -t nat -A POSTROUTING -o <internet_adapter> -j MASQUERADE
+
+sudo iptables -A FORWARD -i enp0s3 -o enp0s8 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i enp0s8 -o enp0s3 -j ACCEPT
+
+
+
+mikrotik
+/ip address add address=192.168.56.2/24 interface=ether1
+/ip route add gateway=192.168.56.1
