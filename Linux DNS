@@ -1,0 +1,29 @@
+sudo apt update
+sudo apt install bind9 bind9utils bind9-doc
+
+
+sudo nano /etc/bind/named.conf
+
+zone "mojadomena.com" {
+    type master;
+    file "/etc/bind/db.mojadomena.com";
+};
+
+
+sudo nano /etc/bind/db.mojadomena.com
+
+
+$TTL 86400
+@   IN  SOA     ns1.mojadomena.com. admin.mojadomena.com. (
+            2023102801 ; Serial
+            3600       ; Refresh
+            1800       ; Retry
+            1209600    ; Expire
+            86400 )    ; Minimum TTL
+
+@       IN  NS      ns1.mojadomena.com.
+
+ns1     IN  A       192.168.56.11  ; IP adresa DNS servera
+@       IN  A       192.168.56.11  ; IP adresa servera za domenu
+
+sudo systemctl restart bind9
